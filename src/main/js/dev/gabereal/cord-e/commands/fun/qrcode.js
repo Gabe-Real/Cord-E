@@ -20,10 +20,6 @@ module.exports = {
         const file = new AttachmentBuilder(url, { name: 'qrcode.png' });
 
         await interaction.reply({
-            content: `📱 Here's your QR code for:\n\`${text}\``,
-            ephemeral: true
-        });
-        await channel.send({
             files: [file]
         });
     }

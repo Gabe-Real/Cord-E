@@ -24,7 +24,7 @@ module.exports = {
 
         try {
             await target.voice.disconnect();
-            await interaction.reply({ content: `Successfully disconnected **${target}** from their voice channel. <:NekoYay:1386313761589039255>`, ephemeral: true });
+            await interaction.reply({ content: `Successfully disconnected **${target}** from their voice channel.`, ephemeral: true });
         } catch (err) {
             await interaction.reply({ content: 'Failed to disconnect the user. Do I have the right permissions?', ephemeral: true });
         }

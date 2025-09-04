@@ -58,13 +58,11 @@ module.exports = {
         }
 
         try {
-            await interaction.guild.members.ban(target.id, { reason });
-
+            await target.send(`You were banned from **${interaction.guild.name}** for ${reason.toLowerCase()}. ${durationMs ? `This ban will expire in ${timeStr}.` : 'This ban is permanent.'}`);
             await interaction.reply({
                 content: `Successfully **banned** ${target.username}. ${durationMs ? `They will be unbanned in ${timeStr}` : 'This ban is permanent'} 💖`,
             });
-
-            await target.send(`You were banned from **${interaction.guild.name}** for ${reason.toLowerCase()}. ${durationMs ? `This ban will expire in ${timeStr}.` : 'This ban is permanent.'}`);
+            await interaction.guild.members.ban(target.id, { reason });
 
             if (durationMs) {
                 setTimeout(async () => {

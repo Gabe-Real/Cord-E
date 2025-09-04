@@ -74,7 +74,8 @@ module.exports = {
             .setFooter({ text: `Message ID: ${reaction.message.id}` });
 
         const jumpButton = new ButtonBuilder()
-            .setLabel('☕ Jump to Message')
+            .setLabel('Jump to Message')
+            .setEmoji('⭐')
             .setStyle(ButtonStyle.Link)
             .setURL(reaction.message.url);
 

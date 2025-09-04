@@ -22,7 +22,7 @@ module.exports = {
 
         const embed = new EmbedBuilder()
             .setTitle('User Beaned')
-            .setDescription(`Beaned <@${user.tag}>\n**Reason**\n${reason}\n**"Responsible" "Moderator"\n${moderator.tag}**`);
+            .setDescription(`Beaned <@${user.id}>\n**Reason**\n${reason}\n\n**"Responsible" "Moderator"**\n<@${moderator.id}>`);
 
         await interaction.reply({ embeds: [embed] });
     }

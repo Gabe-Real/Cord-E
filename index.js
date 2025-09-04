@@ -197,7 +197,7 @@ client.on('messageCreate', async message => {
 client.once(Events.ClientReady, async c => {
     console.log(`Logged in as ${c.user.username}`);
     client.user.setPresence({
-        status: 'dnd',
+        status: 'online',
         activities: [
             { name: 'Sabrina Carpenter', type: ActivityType.Listening },
         ]
