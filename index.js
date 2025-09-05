@@ -78,6 +78,8 @@ client.modals = new Collection();
 const foldersPath = path.join(__dirname, 'src/main/js/dev/gabereal/cord-e/commands');
 const commandFolders = fs.readdirSync(foldersPath);
 const modalFiles = fs.readdirSync(path.join(__dirname, 'src/main/js/dev/gabereal/cord-e/handlers/modals')).filter(file => file.endsWith('.js'));
+const eventsPath = path.join(__dirname, 'src/main/js/dev/gabereal/cord-e/handlers/events');
+const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
 
 for (const folder of commandFolders) {
     const commandsPath = path.join(foldersPath, folder);
@@ -96,6 +98,14 @@ for (const folder of commandFolders) {
 for (const file of modalFiles) {
     const modal = require(`./src/main/js/dev/gabereal/cord-e/handlers/modals/${file}`);
     client.modals.set(modal.customId, modal);
+}
+
+for (const file of eventFiles) {
+    const filePath = path.join(eventsPath, file);
+    const event = require(filePath);
+    if (event.name) {
+        client.on(event.name, (...args) => event.execute(...args, client));
+    }
 }
 
 client.on(Events.InteractionCreate, async interaction => {
@@ -155,13 +165,6 @@ client.on(Events.InteractionCreate, async interaction => {
         await autocompleteHandler.handle(interaction, client);
     }
 
-    if (interaction.isChatInputCommand() && (interaction.commandName === 'nickname')) {
-        await require('./src/main/js/dev/gabereal/cord-e/commands/moderation/nickname').execute(interaction);
-    }
-    else if (interaction.isModalSubmit() && interaction.customId.startsWith('nicknameModal_')) {
-        await require('./src/main/js/dev/gabereal/cord-e/commands/moderation/nickname').modalSubmit(interaction);
-    }
-
 
     if (interaction.isButton()) {
         const [prefix, roleId] = interaction.customId.split(':');
@@ -187,6 +190,7 @@ client.on(Events.InteractionCreate, async interaction => {
             });
         }
     }
+
 })
 
 client.on('messageCreate', async message => {

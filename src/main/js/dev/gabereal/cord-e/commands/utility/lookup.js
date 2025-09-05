@@ -38,17 +38,6 @@ module.exports = {
                         .setDescription('The word you\'re looking for.')
                         .setRequired(true)
                 )
-        )
-        .addSubcommand(sub =>
-            sub
-                .setName('steam')
-                .setDescription('Search for games on steam.')
-                .addStringOption(opt =>
-                    opt
-                        .setName('query')
-                        .setDescription('The name of the game to search for.')
-                        .setRequired(true)
-                )
         ),
 
     async execute(interaction) {
@@ -101,54 +90,6 @@ module.exports = {
                     flags: 1 << 15,
                 });
             }
-        } else if (sub === 'steam') {
-            const query = interaction.options.getString('query');
-            const searchingComponents = [
-                new TextDisplayBuilder().setContent(`Searching Steam for **${query}**...`)
-            ]
-            await interaction.reply({
-                components: searchingComponents,
-                flags: 1 << 15
-            });
-
-            const searchRes = await fetch(
-                `https://store.steampowered.com/api/storesearch/?term=${encodeURIComponent(query)}&cc=US&l=en`
-            );
-            const searchData = await searchRes.json();
-
-            if (!searchData.items || searchData.items.length === 0) {
-
-                const nonFoundComponents = [
-                    new TextDisplayBuilder().setContent(`<:cross:1386317251413671986> No games found on Steam for: \`${query}\`.`)
-                ]
-                return interaction.editReply({
-                    components: nonFoundComponents,
-                    flags: 1 << 15
-                });
-            }
-
-            const results = searchData.items.slice(0, 5);
-            let gamesList = '';
-            for (const game of results) {
-                const title = game.name;
-                const price = game.price ? `$${(game.price.final / 100).toFixed(2)}` : 'Free or Unavailable';
-                const platforms = Object.entries(game.platforms)
-                    .filter(([_, supported]) => supported)
-                    .map(([p]) => p[0].toUpperCase()).join(', ');
-
-                gamesList += `• [${title}](<https://store.steampowered.com/app/${game.id}>) - ${price} (${platforms})\n`;
-            }
-
-            const componentsReply = [
-                new TextDisplayBuilder().setContent(`## 🕹️ Steam results for: '${query}'\n`),
-                new SeparatorBuilder().setDivider(true),
-                new TextDisplayBuilder().setContent(gamesList)
-            ];
-
-            await interaction.editReply({
-                components: componentsReply,
-                flags: 1 << 15,
-            });
         } else if (sub === 'definition') {
             const word = interaction.options.getString('query');
             const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`;
